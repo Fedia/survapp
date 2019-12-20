@@ -11,8 +11,15 @@ const dev = NODE_ENV === "development";
 
 const sessionLifetime = 12 * 60 * 60 * 1000; // 12 hours
 const adminPath = process.env.ADMIN_PATH;
+const indexPath = process.env.INDEX_PATH;
 
 express()
+  .use((req, res, next) => {
+    if (req.path === "/" && indexPath) {
+      req.url = req.originalUrl = indexPath;
+    }
+    next();
+  })
   .use(
     compression({ threshold: 0 }),
     sirv("static", { dev }),
