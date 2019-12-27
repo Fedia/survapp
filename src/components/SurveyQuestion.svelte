@@ -4,6 +4,13 @@
       .reduce((text, node) => text + " " + flatten(node), node.value || "")
       .trim();
   }
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1, j; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
 </script>
 
 <script>
@@ -14,6 +21,9 @@
   export let next = () => {};
 
   const { params } = node.question;
+  if (node.type === "list" && params && params.shuffle) {
+    shuffleArray(node.children);
+  }
   const multi = node.type === "list" && params && (params.min || params.max);
   const textValues = node.children.map(flatten);
 
@@ -116,7 +126,11 @@
 {#if node.type === 'list'}
   <ul class:multi class:single={!multi}>
     {#each node.children as child, i}
-      <li on:click={() => check(i)} class:checked={checked[i]}>
+      <li
+        on:click={() => check(i)}
+        class:checked={checked[i]}
+        role="checkbox"
+        aria-checked={checked[i]}>
         <SurveyNode
           node={{ ...child.children[0], type: 'text' }}
           {context}

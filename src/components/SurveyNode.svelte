@@ -1,3 +1,18 @@
+<script context="module">
+  const headEntries = new Set();
+
+  function appendHead(html) {
+    if (process.browser && !headEntries.has(html)) {
+      document.head.insertAdjacentHTML("beforeEnd", html);
+      headEntries.add(html);
+    }
+  }
+
+  function matchHead(html) {
+    return html.match(/^<head>([\s\S]*)<\/head>$/i);
+  }
+</script>
+
 <script>
   import SurveyQuestion from "./SurveyQuestion.svelte";
   import SurveyPrint from "./SurveyPrint.svelte";
@@ -19,19 +34,16 @@
     cond_value = false;
   }
 
-  function matchHead(html) {
-    return html.match(/^<head>([\s\S]*)<\/head>$/i);
-  }
-
-  let head = false;
+  let head = null;
   if (node.type === "html") {
     let m = matchHead(node.value);
     if (m) {
-      head = true;
-      if (process.browser) {
-        document.head.insertAdjacentHTML("beforeEnd", m[1]);
-      }
+      head = m[1];
     }
+  }
+
+  $: if (cond_value && head) {
+    appendHead(head);
   }
 </script>
 
@@ -92,8 +104,8 @@
     {:else}
       <a
         href={node.url}
-        target={node.url.includes('//') ? '_blank' : ''}
-        rel={node.url.includes('//') ? 'nofollow noopener' : ''}>
+        target={node.url.includes('//') ? '_blank' : '_self'}
+        rel={node.url.includes('//') ? 'nofollow noopener' : false}>
         {#each node.children as child}
           <svelte:self node={child} {context} />
         {/each}
