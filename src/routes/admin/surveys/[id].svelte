@@ -159,10 +159,7 @@
   </header>
 
   <div class="editor">
-    <textarea
-      class="p-2"
-      bind:value={$body}
-      placeholder="# Survey markdown here" />
+    <textarea class="p-2" bind:value={$body} placeholder="# Survey Markdown" />
   </div>
 
 </div>

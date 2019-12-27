@@ -22,7 +22,8 @@ function allowedEmail(email) {
 }
 
 const baseurl = req =>
-  `${req.connection.encrypted ? "https" : "http"}://${req.headers.host}`;
+  //  `${req.connection.encrypted ? "https" : "http"}://${req.headers.host}`;
+  "https://" + req.headers.host;
 
 const randString = l =>
   [...Array(l)].map(() => ((Math.random() * 36) | 0).toString(36)).join("");

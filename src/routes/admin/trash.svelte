@@ -97,7 +97,6 @@
       <a href={path} class="btn btn-link">
         <i class="icon icon-back" />
       </a>
-      <span>Deleted surveys</span>
     </section>
     <section class="navbar-section">
       <div class="sortby btn-group">

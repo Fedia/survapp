@@ -139,7 +139,7 @@
         <div class="column right text-gray">
           {#if survey.published_at}
             <i class="icon icon-link" />
-            <a href="/{survey.url}" target="_blank">{survey.url}</a>
+            <a href="/{survey.url}" target="_blank" rel="nofollow noopener">{survey.url}</a>
           {/if}
         </div>
         <div class="column col-3 right text-gray hide-xs">
@@ -164,7 +164,7 @@
                 </li>
               {/if}
               <li class="menu-item">
-                <a href="{path}surveys/{survey.id}.csv">Download results</a>
+                <a href="{path}surveys/{survey.id}.csv">Download CSV</a>
               </li>
             </ul>
           </div>

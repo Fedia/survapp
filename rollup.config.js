@@ -11,11 +11,19 @@ import sveltePreprocess from "svelte-preprocess";
 
 dotenv.config();
 
-const preprocess = sveltePreprocess({
-  scss: {
-    includePaths: ["src", "node_modules"]
-  }
+// fix trailing whitespace added by prettier
+const markup = input => ({
+  code: input.content.replace(/\s+(<\/|\{\/|\{:)/g, "$1")
 });
+
+const preprocess = {
+  ...sveltePreprocess({
+    scss: {
+      includePaths: ["src", "node_modules"]
+    }
+  }),
+  markup
+};
 
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
@@ -106,8 +114,8 @@ export default {
     ),
 
     onwarn
-  },
-
+  }
+  /*
   serviceworker: {
     input: config.serviceworker.input(),
     output: config.serviceworker.output(),
@@ -120,7 +128,6 @@ export default {
       commonjs(),
       !dev && terser()
     ],
-
     onwarn
-  }
+  } */
 };

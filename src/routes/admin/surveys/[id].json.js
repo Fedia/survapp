@@ -10,7 +10,7 @@ export async function get(req, res) {
   const survey = await Survey.query()
     .canRead(email)
     .findById(id);
-  res.send(survey);
+  survey ? res.send(survey) : res.sendStatus(404);
 }
 
 export async function del(req, res) {

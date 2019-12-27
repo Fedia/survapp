@@ -90,7 +90,10 @@
         {/each}
       </a>
     {:else}
-      <a href={node.url} target={node.url.includes('//') ? '_blank' : ''}>
+      <a
+        href={node.url}
+        target={node.url.includes('//') ? '_blank' : ''}
+        rel={node.url.includes('//') ? 'nofollow noopener' : ''}>
         {#each node.children as child}
           <svelte:self node={child} {context} />
         {/each}
