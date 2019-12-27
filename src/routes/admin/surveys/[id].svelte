@@ -150,7 +150,7 @@
               {#if !readonly}
                 <a href="javascript:" on:click={share}>Share</a>
               {/if}
-              <a href="{path}.csv">Download results</a>
+              <a href="{path}.csv">Download CSV</a>
             </li>
           </ul>
         </div>
