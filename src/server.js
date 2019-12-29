@@ -13,8 +13,17 @@ const sessionLifetime = 12 * 60 * 60 * 1000; // 12 hours
 const adminPath = process.env.ADMIN_PATH;
 const indexPath = process.env.INDEX_PATH;
 
-function no_cache(req, res, next) {
-  res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+function overrideCacheControl(req, res, next) {
+  const setHeader = res.setHeader;
+  res.setHeader = function(key, value) {
+    return value === "max-age=600"
+      ? setHeader.call(
+          this,
+          key,
+          "no-store, no-cache, must-revalidate, private"
+        )
+      : setHeader.apply(this, arguments);
+  };
   next();
 }
 
@@ -38,7 +47,7 @@ express()
   )
   .use(
     adminPath,
-    no_cache,
+    overrideCacheControl,
     session({
       path: adminPath + "/",
       sameSite: true,
