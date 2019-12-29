@@ -72,5 +72,9 @@ export async function get(req, res) {
       req.session.user = { email: login.email };
     }
   }
-  res.redirect(`${req.path}/../`);
+  // BUG in express - cookie not set with redirect header: https://github.com/expressjs/session/issues/660
+  // res.redirect(`${req.path}/../`);
+  res.send(
+    `<html><head><meta http-equiv="refresh" content="0;URL=${req.path}/../"></head></html>`
+  );
 }
