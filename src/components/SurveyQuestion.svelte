@@ -29,6 +29,11 @@
 
   let checked = {};
   const selected = context[node.question.name];
+
+  if (selected === undefined) {
+    context[node.question.name] = null;
+  }
+
   if (Array.isArray(selected)) {
     textValues.forEach((v, i) => {
       checked[i] = selected.includes(v);

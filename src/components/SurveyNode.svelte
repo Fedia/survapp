@@ -111,12 +111,20 @@
         {/each}
       </a>
     {/if}
+  {:else if node.type === 'image'}
+    <img src={node.url} alt={node.alt} />
   {:else if node.type === 'strong'}
     <b>
       {#each node.children as child}
         <svelte:self node={child} {context} {next} />
       {/each}
     </b>
+  {:else if node.type === 'emphasis'}
+    <i>
+      {#each node.children as child}
+        <svelte:self node={child} {context} {next} />
+      {/each}
+    </i>
   {:else if node.value}
     {@html node.value}
   {:else if node.children}

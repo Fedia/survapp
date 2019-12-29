@@ -103,7 +103,7 @@
   @import "styles/public";
   .next,
   .back {
-    padding: 0 0.4em;
+    padding: 0.2em 0.4em;
     width: 100%;
     box-sizing: border-box;
     border: 1px solid rgba(0, 0, 0, 0.7);
