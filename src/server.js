@@ -13,6 +13,11 @@ const sessionLifetime = 12 * 60 * 60 * 1000; // 12 hours
 const adminPath = process.env.ADMIN_PATH;
 const indexPath = process.env.INDEX_PATH;
 
+function no_cache(req, res, next) {
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  next();
+}
+
 express()
   .use((req, res, next) => {
     if (req.path === "/" && indexPath) {
@@ -33,6 +38,7 @@ express()
   )
   .use(
     adminPath,
+    no_cache,
     session({
       path: adminPath + "/",
       sameSite: true,
