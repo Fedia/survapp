@@ -40,6 +40,8 @@
     });
   }
 
+  const className = params.class || null;
+
   function check(i) {
     if (multi) {
       if (checked[i]) {
@@ -131,7 +133,10 @@
 </style>
 
 {#if node.type === 'list'}
-  <ul class:multi class:single={!multi}>
+  <ul
+    class:multi={multi && !className}
+    class:single={!multi && !className}
+    class={className}>
     {#each node.children as child, i}
       <li
         on:click={() => check(i)}
@@ -149,11 +154,13 @@
   <p class="input">
     {#if params.rows}
       <textarea
+        class={className}
         rows={params.rows}
         placeholder={flatten(node)}
         bind:value={context[node.question.name]} />
     {:else}
       <input
+        class={className}
         type="text"
         placeholder={flatten(node)}
         bind:value={context[node.question.name]} />
