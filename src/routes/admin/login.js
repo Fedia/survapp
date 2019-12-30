@@ -44,7 +44,7 @@ function sendLink(email, link) {
 export async function post(req, res) {
   const { email } = req.body;
   if (email) {
-    if (!allowedEmail(email)) {
+    if (!allowedEmail(String(email).toLowerCase())) {
       res.sendStatus(400);
       return;
     }
@@ -72,13 +72,5 @@ export async function get(req, res) {
       req.session.user = { email: login.email };
     }
   }
-  res.setHeader(
-    "Cache-Control",
-    "no-store, no-cache, must-revalidate, private"
-  );
-  // BUG in express - cookie not set with redirect header: https://github.com/expressjs/session/issues/660
-  // res.redirect(`${req.path}/../`);
-  res.send(
-    `<html><head><meta http-equiv="refresh" content="2;URL=${req.path}/../"></head><body>Redirecting...</body></html>`
-  );
+  res.redirect(`${req.path}/../`);
 }
