@@ -40,7 +40,7 @@
     });
   }
 
-  const className = params.class || null;
+  const className = params.class || "";
 
   function check(i) {
     if (multi) {
@@ -130,6 +130,10 @@
     border: 1px solid rgba(0, 0, 0, 0.7);
     border-radius: 2px;
   }
+  .input input[type="number"] {
+    display: inline-block;
+    width: auto;
+  }
 </style>
 
 {#if node.type === 'list'}
@@ -156,6 +160,14 @@
       <textarea
         class={className}
         rows={params.rows}
+        placeholder={flatten(node)}
+        bind:value={context[node.question.name]} />
+    {:else if !isNaN(params.min) || !isNaN(params.max)}
+      <input
+        class={className}
+        type="number"
+        min={params.min}
+        max={params.max}
         placeholder={flatten(node)}
         bind:value={context[node.question.name]} />
     {:else}
