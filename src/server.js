@@ -48,7 +48,7 @@ express()
     overrideCacheControl,
     session({
       path: adminPath + "/",
-      sameSite: true,
+      sameSite: "lax",
       name: "session",
       keys: [process.env.AUTH_SECRET],
       maxAge: sessionLifetime
