@@ -1,3 +1,3 @@
 export function createFunction(expr) {
-  return new Function("_c", `with(_c) return ${expr}`);
+  return new Function("survey", `with(survey) return ${expr}`);
 }

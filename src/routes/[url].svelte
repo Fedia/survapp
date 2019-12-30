@@ -79,7 +79,6 @@
   }
 
   if (process.browser) {
-    window.survey_set = (key, val) => (context[key] = val);
     window.survey_send = resp;
   }
 
