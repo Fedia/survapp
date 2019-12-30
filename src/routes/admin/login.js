@@ -72,9 +72,15 @@ export async function get(req, res) {
       req.session.user = { email: login.email };
     }
   }
+  res.setHeader(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, private"
+  );
   // BUG in express - cookie not set with redirect header: https://github.com/expressjs/session/issues/660
-  // res.redirect(`${req.path}/../`);
+  res.redirect(`${req.path}/../`);
+  /*
   res.send(
     `<html><head><meta http-equiv="refresh" content="0;URL=${req.path}/../"></head></html>`
   );
+  */
 }

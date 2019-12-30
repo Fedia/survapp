@@ -16,13 +16,11 @@ const indexPath = process.env.INDEX_PATH;
 function overrideCacheControl(req, res, next) {
   const setHeader = res.setHeader;
   res.setHeader = function(key, value) {
-    return value === "max-age=600"
-      ? setHeader.call(
-          this,
-          key,
-          "no-store, no-cache, must-revalidate, private"
-        )
-      : setHeader.apply(this, arguments);
+    if (value === "max-age=600") {
+      setHeader.call(this, key, "no-store, no-cache, must-revalidate, private");
+    } else {
+      setHeader.apply(this, arguments);
+    }
   };
   next();
 }
