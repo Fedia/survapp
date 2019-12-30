@@ -75,6 +75,7 @@
   }
   .single > li {
     cursor: pointer;
+    margin: 0.4em 0;
   }
   .single > li:before {
     box-sizing: border-box;
@@ -97,6 +98,7 @@
   }
   .multi > li {
     cursor: pointer;
+    margin: 0.4em 0;
   }
   .multi > li:before {
     box-sizing: border-box;

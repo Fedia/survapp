@@ -39,6 +39,16 @@
           .join("")
       : "";
   }
+
+  const chars =
+    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+  function uid() {
+    let id = "";
+    let size = 16;
+    while (size--) id += chars[(Math.random() * 62) | 0];
+    return id;
+  }
 </script>
 
 <script>
@@ -54,6 +64,7 @@
   );
 
   let context = {
+    uid: uid(),
     started_at: new Date()
       .toISOString()
       .substring(0, 19)
@@ -65,6 +76,11 @@
       method: "POST",
       body: JSON.stringify(context)
     });
+  }
+
+  if (process.browser) {
+    window.survey_set = (key, val) => (context[key] = val);
+    window.survey_send = resp;
   }
 
   let pageIndex = 0;
