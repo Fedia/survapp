@@ -155,16 +155,14 @@
     {/each}
   </ul>
 {:else if node.type === 'paragraph'}
-  <p class="input">
+  <p class="input {className}">
     {#if params.rows}
       <textarea
-        class={className}
         rows={params.rows}
         placeholder={flatten(node)}
         bind:value={context[node.question.name]} />
     {:else if !isNaN(params.min) || !isNaN(params.max)}
       <input
-        class={className}
         type="number"
         min={params.min}
         max={params.max}
@@ -172,7 +170,6 @@
         bind:value={context[node.question.name]} />
     {:else}
       <input
-        class={className}
         type="text"
         placeholder={flatten(node)}
         bind:value={context[node.question.name]} />

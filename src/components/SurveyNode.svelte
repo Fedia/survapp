@@ -125,6 +125,10 @@
         <svelte:self node={child} {context} {next} />
       {/each}
     </i>
+  {:else if node.type === 'inlineCode'}
+    <tt>{node.value}</tt>
+  {:else if node.type === 'break'}
+    <br />
   {:else if node.value}
     {@html node.value}
   {:else if node.children}
