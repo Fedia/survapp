@@ -168,6 +168,11 @@
         max={params.max}
         placeholder={flatten(node)}
         bind:value={context[node.question.name]} />
+    {:else if params.email}
+      <input
+        type="email"
+        placeholder={flatten(node)}
+        bind:value={context[node.question.name]} />
     {:else}
       <input
         type="text"

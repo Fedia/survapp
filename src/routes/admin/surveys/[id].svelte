@@ -72,9 +72,17 @@
     }
   }
 
+  const discard_message = "Discard changes?";
+
+  if (process.browser) {
+    window.onbeforeunload = function() {
+      if (dirty) return discard_message;
+    };
+  }
+
   function confirm(e) {
     if (dirty) {
-      if (!window.confirm("Discard changes?")) e.preventDefault();
+      if (!window.confirm(discard_message)) e.preventDefault();
     }
   }
 
