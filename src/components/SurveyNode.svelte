@@ -105,7 +105,7 @@
       <a
         href={node.url}
         target={node.url.includes('//') ? '_blank' : '_self'}
-        rel={node.url.includes('//') ? 'nofollow noopener' : false}>
+        rel={node.url.includes('//') ? 'nofollow noopener' : ''}>
         {#each node.children as child}
           <svelte:self node={child} {context} />
         {/each}
