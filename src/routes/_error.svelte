@@ -8,14 +8,13 @@
 <style>
   h1,
   p {
-    margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
   }
 
   h1 {
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 2.8em;
     font-weight: 700;
-    margin: 0 0 0.5em 0;
   }
 
   p {
