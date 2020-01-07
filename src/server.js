@@ -25,7 +25,10 @@ function overrideCacheControl(req, res, next) {
   next();
 }
 
-express()
+const app = express();
+app.set("trust proxy", true);
+
+app
   .use((req, res, next) => {
     if (req.path === "/" && indexPath) {
       req.url = req.originalUrl = indexPath;
@@ -49,7 +52,7 @@ express()
     session({
       path: adminPath + "/",
       sameSite: false,
-      name: "session",
+      name: "survadm",
       keys: [process.env.AUTH_SECRET],
       maxAge: sessionLifetime
     }),

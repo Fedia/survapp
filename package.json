@@ -20,6 +20,8 @@
     "express": "^4.17.1",
     "fast-csv": "^3.4.0",
     "knex": "^0.19.4",
+    "lru-cache": "^5.1.1",
+    "nanoid": "^2.1.9",
     "nodemailer": "^4.7.0",
     "objection": "^1.6.9",
     "polka": "next",

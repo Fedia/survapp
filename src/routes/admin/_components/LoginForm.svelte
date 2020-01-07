@@ -3,6 +3,8 @@
 
   export let path = "";
 
+  const fromLogin = process.browser && location.search === "?login";
+
   let email = "";
   let error = false;
   let loading = false;
@@ -21,6 +23,18 @@
     loading = false;
     done = res.ok;
     error = !done;
+    if (done) {
+      checkLogin();
+    }
+  }
+
+  async function checkLogin() {
+    const res = await fetch(`${path}login`);
+    if (res.ok) {
+      location.reload(true);
+    } else {
+      setTimeout(checkLogin, 5000);
+    }
   }
 </script>
 
@@ -50,28 +64,35 @@
       class:has-success={done}
       on:submit|preventDefault={submit}>
       <h4 class="text-center">Welcome to {APP_NAME}</h4>
-      <div class="form-group">
-        <div class="column col-xs-12">
-          <input
-            bind:value={email}
-            class="form-input email"
-            type="email"
-            placeholder="Email"
-            tabindex="0" />
+      {#if fromLogin}
+        <p>Logged in! Please check your other browser or device.</p>
+      {:else}
+        <div class="form-group">
+          <div class="column col-xs-12">
+            <input
+              bind:value={email}
+              class="form-input email"
+              type="email"
+              placeholder="Email"
+              tabindex="0" />
+          </div>
+          <div class="column col-auto col-xs-12">
+            <button
+              type="submit"
+              class="btn btn-primary col-xs-12"
+              class:loading>
+              Send link
+            </button>
+          </div>
         </div>
-        <div class="column col-auto col-xs-12">
-          <button type="submit" class="btn btn-primary col-xs-12" class:loading>
-            Send link
-          </button>
-        </div>
-      </div>
+      {/if}
       {#if error}
         <p class="form-input-hint px-2">
           Sign in error. Please contact the administrator.
         </p>
       {/if}
       {#if done}
-        <p class="form-input-hint px-2">Link sent to {email}</p>
+        <p class="form-input-hint px-2">Link sent to {email}!</p>
       {/if}
     </form>
   </div>
