@@ -15,6 +15,7 @@
   url.subscribe(() => (url_exists = false));
 
   $: if (survey) {
+    url_exists = false; // need to reset the state here because $url won't trigger update if the previous value was the same
     $url = survey.url;
     $published = !!survey.published_at;
   }
