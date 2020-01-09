@@ -10,15 +10,20 @@
   let loading = false;
   let done = false;
 
+  const req = {
+    credentials: "include",
+    headers: { "Content-Type": "application/json" }
+  };
+
   async function submit() {
     done = false;
     error = false;
     if (!email.includes("@")) return;
     loading = true;
     const res = await fetch(`${path}login`, {
+      ...req,
       method: "POST",
-      body: JSON.stringify({ email }),
-      headers: { "Content-Type": "application/json" }
+      body: JSON.stringify({ email })
     });
     loading = false;
     done = res.ok;
@@ -29,7 +34,7 @@
   }
 
   async function checkLogin() {
-    const res = await fetch(`${path}login`);
+    const res = await fetch(`${path}login`, req);
     if (res.ok) {
       location.reload(true);
     } else {
