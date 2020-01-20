@@ -22,5 +22,6 @@ export const loginEmail = ({
     <p>Login request from <tt>${escapeHTML(ip)}</tt> ${escapeHTML(
     useragent
   )}</p>
-    <p>Click the link <em>if that is you</em>: <a href="${link}">${link}</a></p>`
+    <p>Click the link <u>if that is you</u>: <a href="${link}">${link}</a></p>
+    <p>It would be valid for 10 minutes only.<p>`
 });
