@@ -89,6 +89,9 @@
     top: 0;
     background-color: rgba(255, 255, 255, 0.9);
   }
+  .sortby {
+    flex-wrap: nowrap;
+  }
   .sortby .btn {
     min-width: 2.5em;
     max-width: 2.5em;
@@ -133,19 +136,18 @@
   <div class="surveys main-width container my-2">
     {#each surveys_sorted as survey (survey.id + survey.published_at)}
       <div class="columns py-2">
-        <div class="column col-5 no-overflow">
+        <div class="column no-overflow">
           <a href="{path}surveys/{survey.id}">{survey.title || 'Untitled'}</a>
         </div>
-        <div class="column right text-gray">
+        <div class="column right hide-xs">{formatDate(survey.updated_at)}</div>
+        <div class="column right">
           {#if survey.published_at}
-            <i class="icon icon-link" />
-            <a href="/{survey.url}" target="_blank" rel="nofollow noopener">{survey.url}</a>
+            <a href="/{survey.url}" target="_blank" rel="nofollow noopener">
+              {survey.url}
+            </a>
           {/if}
         </div>
-        <div class="column col-3 right text-gray hide-xs">
-          {formatDate(survey.updated_at)}
-        </div>
-        <div class="column col-2 right">
+        <div class="right">
           <div class="dropdown dropdown-right">
             <button class="btn btn-link dropdown-toggle" tabindex="0">
               <i class="icon icon-more-vert" />

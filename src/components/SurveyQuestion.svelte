@@ -68,6 +68,8 @@
   function save(val) {
     context[node.question.name] = val;
   }
+
+  const qname = node.question.name;
 </script>
 
 <style>
@@ -138,6 +140,7 @@
 
 {#if node.type === 'list'}
   <ul
+    id={qname}
     class:multi={multi && !className}
     class:single={!multi && !className}
     class={className}>
@@ -155,7 +158,7 @@
     {/each}
   </ul>
 {:else if node.type === 'paragraph'}
-  <p class="input {className}">
+  <p id={qname} class="input {className}">
     {#if params.rows}
       <textarea
         rows={params.rows}
