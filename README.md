@@ -33,7 +33,7 @@ surv.app is a node.js application backed by SQLite3, Postgres or MySQL.
 Git clone:
 
 ```
-git clone https://github.com/fedor/survapp survapp
+git clone https://github.com/Fedia/survapp survapp
 cd survapp
 ```
 
