@@ -1,4 +1,4 @@
-<img style="display:block; margin:1em auto" src="https://surv.app/logo.png" width="64" height="64">
+<p align="center"><img src="https://surv.app/logo.png" width="64" height="64"></p>
 
 # surv.app
 
