@@ -6,6 +6,8 @@ With [surv.app](//surv.app) you can create _advanced multi-page surveys in Markd
 
 A survey in surv.app is just a Markdown document which can also contain valid HTML blocks. We provide some syntax extensions for asking questions, skip logic, and displaying previous answers.
 
+**Demo survey:** https://surv.app/demo
+
 ## Survey Markup Example
 
 ```
