@@ -6,3 +6,4 @@
 *.log
 *.db
 *.zip
+.*.md
