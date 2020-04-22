@@ -10,7 +10,7 @@ function survey() {
     blockMethods,
     blockTokenizers,
     inlineMethods,
-    inlineTokenizers
+    inlineTokenizers,
   } = this.Parser.prototype;
   blockMethods.splice(blockMethods.indexOf("setextHeading"), 1);
   blockTokenizers.question = tokenizeQuestion;
@@ -24,6 +24,27 @@ function survey() {
   inlineTokenizers.print = tokenizePrint;
   inlineMethods.splice(inlineMethods.indexOf("text"), 0, printType);
   return transformer;
+}
+
+function mergeHTML(nodes) {
+  let len = nodes.length;
+  let node, html;
+  const merged = [];
+  for (let i = 0; i < len; i++) {
+    node = nodes[i];
+    if (node.type === "html" || node.type === "text") {
+      if (html) {
+        html.value += node.value;
+      } else {
+        html = node;
+        merged.push(node);
+      }
+    } else {
+      html = null;
+      merged.push(node);
+    }
+  }
+  return merged;
 }
 
 function transformer(tree) {
@@ -52,6 +73,9 @@ function transformer(tree) {
         pages.push(page);
         page = { ...node, type: "page", children: [] };
       } else {
+        if (node.children) {
+          node.children = mergeHTML(node.children);
+        }
         page.children.push(node);
       }
     }
@@ -69,7 +93,7 @@ function tokenizeQuestion(eat, value, silent) {
     return eat(match[0])({
       type: questionType,
       name: match[1],
-      params: parseAttrs(match[2])
+      params: parseAttrs(match[2]),
     });
   }
 }
@@ -93,25 +117,25 @@ function tokenizeCondition(eat, value, silent) {
     }
     return eat(match[0])({
       type: conditionType,
-      expr: match[1]
+      expr: match[1],
     });
   }
 }
 
 function tokenizePrint(eat, value, silent) {
-  const match = /^\{(.*)\}/.exec(value);
+  const match = /^\{([^}]+)\}/.exec(value);
   if (match) {
     if (silent) {
       return true;
     }
     return eat(match[0])({
       type: printType,
-      expr: match[1]
+      expr: match[1],
     });
   }
 }
 tokenizePrint.notInLink = true;
-tokenizePrint.locator = function(value, fromIndex) {
+tokenizePrint.locator = function (value, fromIndex) {
   return value.indexOf("{", fromIndex);
 };
 
@@ -120,6 +144,6 @@ const p = unified()
   .use(markdown)
   .use(survey);
 
-export default function(md) {
+export default function (md) {
   return p.run(p.parse(md));
 }

@@ -74,10 +74,13 @@
 
   const discard_message = "Discard changes?";
 
+  let host = "";
+
   if (process.browser) {
     window.onbeforeunload = function() {
       if (dirty) return discard_message;
     };
+    host = `${location.protocol}//${location.host}`;
   }
 
   function confirm(e) {
@@ -156,8 +159,13 @@
           <ul class="menu">
             <li class="menu-item">
               {#if !readonly}
-                <a href="javascript:" on:click={share}>Share</a>
+                <a href="javascript:" on:click={share}>Share access</a>
               {/if}
+              <a
+                href="javascript:"
+                on:click={() => prompt('Anyone can download CSV with this link:', `${host + path}.csv?key=${survey.accessKey}`)}>
+                Share CSV
+              </a>
               <a href="{path}.csv">Download CSV</a>
             </li>
           </ul>

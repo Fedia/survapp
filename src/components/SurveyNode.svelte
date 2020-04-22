@@ -5,11 +5,32 @@
     if (process.browser && !headEntries.has(html)) {
       document.head.insertAdjacentHTML("beforeEnd", html);
       headEntries.add(html);
+      runScripts(document.head);
     }
   }
 
   function matchHead(html) {
     return html.match(/^<head>([\s\S]*)<\/head>$/i);
+  }
+
+  function runScripts(root) {
+    const tag = "script";
+    Array.from(root.querySelectorAll(tag)).forEach(node => {
+      if (node._started) return;
+      const s = document.createElement(tag);
+      s._started = true;
+      Array.from(node.attributes).forEach(attr =>
+        s.setAttribute(attr.name, attr.value)
+      );
+      s.appendChild(document.createTextNode(node.innerHTML));
+      node.parentNode.replaceChild(s, node);
+    });
+  }
+
+  function inlinePrints(str, ctx) {
+    return str.replace(/\{ *([^ }]+) *\}/g, (_, key) =>
+      key in ctx && ctx[key] !== null ? ctx[key] : ""
+    );
   }
 </script>
 
@@ -103,7 +124,7 @@
       </a>
     {:else}
       <a
-        href={node.url}
+        href={inlinePrints(node.url, context)}
         target={node.url.includes('//') ? '_blank' : '_self'}
         rel={node.url.includes('//') ? 'nofollow noopener' : ''}>
         {#each node.children as child}
@@ -112,7 +133,7 @@
       </a>
     {/if}
   {:else if node.type === 'image'}
-    <img src={node.url} alt={node.alt} />
+    <img src={inlinePrints(node.url, context)} alt={node.alt} />
   {:else if node.type === 'strong'}
     <b>
       {#each node.children as child}
@@ -130,7 +151,7 @@
   {:else if node.type === 'break'}
     <br />
   {:else if node.value}
-    {@html node.value}
+    {@html inlinePrints(node.value, context)}
   {:else if node.children}
     {#each node.children as child}
       <svelte:self node={child} {context} {next} />

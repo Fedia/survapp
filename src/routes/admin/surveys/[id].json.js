@@ -1,4 +1,5 @@
 import { Survey } from "../../../db";
+import createToken from "./_token";
 
 export async function get(req, res) {
   if (!req.session.user) {
@@ -7,10 +8,9 @@ export async function get(req, res) {
   }
   const { id } = req.params;
   const { email } = req.session.user;
-  const survey = await Survey.query()
-    .canRead(email)
-    .findById(id);
-  survey ? res.send(survey) : res.sendStatus(404);
+  const accessKey = createToken(id);
+  const survey = await Survey.query().canRead(email).findById(id);
+  survey ? res.send({ ...survey, accessKey }) : res.sendStatus(404);
 }
 
 export async function del(req, res) {
@@ -20,9 +20,7 @@ export async function del(req, res) {
   }
   const { id } = req.params;
   const { email } = req.session.user;
-  const r = await Survey.query()
-    .ownedBy(email)
-    .deleteById(id);
+  const r = await Survey.query().ownedBy(email).deleteById(id);
   res.sendStatus(r === 1 ? 200 : 400);
 }
 

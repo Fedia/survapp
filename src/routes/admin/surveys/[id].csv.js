@@ -1,5 +1,6 @@
 import { Survey } from "../../../db";
 import { format } from "fast-csv";
+import createToken from "./_token";
 
 function transform(row) {
   try {
@@ -14,15 +15,17 @@ function transform(row) {
 const csvOptions = { headers: true, delimiter: ";", writeBOM: true, transform };
 
 export async function get(req, res) {
-  if (!req.session.user) {
+  const { id } = req.params;
+  let survey;
+  if (req.session.user) {
+    const { email } = req.session.user;
+    survey = await Survey.query().canRead(email).findById(id);
+  } else if (req.query.key && req.query.key === createToken(id)) {
+    survey = await Survey.query().findById(id);
+  } else {
     res.sendStatus(400);
     return;
   }
-  const { id } = req.params;
-  const { email } = req.session.user;
-  const survey = await Survey.query()
-    .canRead(email)
-    .findById(id);
   if (survey) {
     res.writeHead(200, { "Content-Type": "text/csv" });
     const stream = survey.streamResponses();
