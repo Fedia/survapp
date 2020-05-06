@@ -151,7 +151,7 @@
   {:else if node.type === 'break'}
     <br />
   {:else if node.value}
-    {@html inlinePrints(node.value, context)}
+    {@html node.value}
   {:else if node.children}
     {#each node.children as child}
       <svelte:self node={child} {context} {next} />

@@ -2,7 +2,7 @@
   import SurveyNode from "../components/SurveyNode.svelte";
   import { createFunction } from "../components/expressions";
 
-  const APP_NAME = process.env.APP_NAME;
+  // const APP_NAME = process.env.APP_NAME;
 
   export async function preload(page) {
     const { path } = page;
@@ -30,6 +30,7 @@
     };
   }
 
+  /*
   function firstHeaderText(node) {
     const heading = node.children.find(n => n.type === "heading");
     return heading
@@ -39,6 +40,7 @@
           .join("")
       : "";
   }
+*/
 
   const chars =
     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -53,9 +55,6 @@
 
 <script>
   export let survey;
-  export let endpoint;
-
-  export let segment;
 
   const pages = survey.body;
   const alwaysTrue = () => true;
@@ -129,9 +128,9 @@
   }
 </style>
 
-<svelte:head>
-  <title>{firstHeaderText(pages[0]) || APP_NAME}</title>
-</svelte:head>
+<!-- svelte:head>
+  <title>{firstHeaderText(page[0]) || APP_NAME}</title>
+</svelte:head -->
 
 <div class="viewport typo">
   {#each pages as page, i}
