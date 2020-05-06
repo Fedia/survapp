@@ -7,14 +7,14 @@ const PROD_ENV = process.env.NODE_ENV !== "development";
 
 const tokenCache = new LRU({
   max: 500,
-  maxAge: 1000 * 60 * 10
+  maxAge: 1000 * 60 * 10,
 });
 
 const emails = process.env.USER_EMAILS;
 const domains = process.env.USER_DOMAINS;
 const allowEmails = [];
 const allowDomains = [];
-const split = str => str.split(/ +/).filter(Boolean);
+const split = (str) => str.split(/ +/).filter(Boolean);
 if (emails) {
   allowEmails.push(...split(emails));
 }
@@ -30,24 +30,33 @@ function allowedEmail(email) {
   return false;
 }
 
-const baseurl = req =>
+const baseurl = (req) =>
   `${PROD_ENV || req.connection.encrypted ? "https" : "http"}://${
     req.headers.host
   }`;
 
-const randString = l => "s" + nanoid(l - 1);
+const randString = (l) => "s" + nanoid(l - 1);
+
+function getSMTPuser(connStr) {
+  const m = connStr.match(/^smtp:\/\/([^:]+):/i);
+  return m ? m[1] : null;
+}
 
 function sendLink({ email, link, useragent, ip }) {
   if (!process.env.MAIL_CONN) throw new Error("MAIL_CONN is empty");
-  const transport = mailer.createTransport(process.env.MAIL_CONN);
+  const { MAIL_CONN } = process.env;
+  const transport = mailer.createTransport(MAIL_CONN);
+  const application = process.env.APP_NAME || "surv.app";
+  const from = `${application} <${getSMTPuser(MAIL_CONN)}>`;
   return transport.sendMail(
     loginEmail({
+      from,
       email,
       link,
       username: email.split("@")[0],
-      application: process.env.APP_NAME || "surv.app",
+      application,
       useragent,
-      ip
+      ip,
     })
   );
 }

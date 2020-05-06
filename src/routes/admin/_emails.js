@@ -7,21 +7,22 @@ function escapeHTML(str) {
 }
 
 export const loginEmail = ({
+  from,
   email,
   username,
   application,
   link,
   useragent,
-  ip
+  ip,
 }) => ({
-  from: application,
+  from,
   to: email,
   subject: `[${application}] Sign in`,
   html: `
     <p><b>Hi ${escapeHTML(username)}!</b></p>
-    <p>Login request from <tt>${escapeHTML(ip)}</tt> ${escapeHTML(
+    <p>Login request from <tt>${escapeHTML(ip)}</tt> using ${escapeHTML(
     useragent
   )}</p>
-    <p>Click the link <u>if that is you</u>: <a href="${link}">${link}</a></p>
-    <p>It would be valid for 10 minutes only.<p>`
+    <p>Click the link if that is you: <a href="${link}">${link}</a></p>
+    <p>It would be valid for 10 minutes.<p>`,
 });
