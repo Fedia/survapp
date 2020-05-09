@@ -1,29 +1,19 @@
 <script context="module">
-  const headEntries = new Set();
-
-  function appendHead(html) {
-    if (process.browser && !headEntries.has(html)) {
-      document.head.insertAdjacentHTML("beforeEnd", html);
-      headEntries.add(html);
-      runScripts(document.head);
-    }
-  }
-
   function matchHead(html) {
     return html.match(/^<head>([\s\S]*)<\/head>$/i);
   }
 
-  function runScripts(root) {
-    const tag = "script";
-    Array.from(root.querySelectorAll(tag)).forEach(node => {
+  function runScripts(sel) {
+    Array.from(document.querySelectorAll(sel)).forEach(node => {
       if (node._started) return;
-      const s = document.createElement(tag);
-      s._started = true;
-      Array.from(node.attributes).forEach(attr =>
-        s.setAttribute(attr.name, attr.value)
-      );
-      s.appendChild(document.createTextNode(node.innerHTML));
-      node.parentNode.replaceChild(s, node);
+      node._started = true;
+      const s = document.createElement("script");
+      if (node.src) {
+        s.src = node.src;
+      } else {
+        s.appendChild(document.createTextNode(node.innerHTML));
+      }
+      node.parentNode.insertBefore(s, node);
     });
   }
 
@@ -35,6 +25,7 @@
 </script>
 
 <script>
+  import { onMount } from "svelte";
   import SurveyQuestion from "./SurveyQuestion.svelte";
   import SurveyPrint from "./SurveyPrint.svelte";
   import { createFunction } from "./expressions";
@@ -57,16 +48,20 @@
 
   let head = null;
   if (node.type === "html") {
+    node.value = node.value.replace(/<script([^>]*)>/gi, "<script$1 data-s>");
+    onMount(() => runScripts("script[data-s]"));
     let m = matchHead(node.value);
     if (m) {
       head = m[1];
     }
   }
-
-  $: if (cond_value && head) {
-    appendHead(head);
-  }
 </script>
+
+<svelte:head>
+  {#if head && cond_value}
+    {@html head}
+  {/if}
+</svelte:head>
 
 {#if cond_value}
   {#if head}

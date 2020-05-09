@@ -15,7 +15,7 @@ export async function createSchema(force) {
   }
 
   await knex.schema
-    .createTable("surveys", table => {
+    .createTable("surveys", (table) => {
       table.increments("id").primary();
       table.string("url");
       table.string("title");
@@ -36,7 +36,7 @@ export async function createSchema(force) {
       table.boolean("current");
       table.timestamps(true, true);
     })*/
-    .createTable("responses", table => {
+    .createTable("responses", (table) => {
       table.increments("id").primary();
       table.integer("survey_id").references("surveys.id");
       table.timestamp("created_at").defaultTo(knex.fn.now());
@@ -98,9 +98,9 @@ export class Survey extends Model {
         modelClass: SurveyResponse,
         join: {
           from: "surveys.id",
-          to: "responses.survey_id"
-        }
-      }
+          to: "responses.survey_id",
+        },
+      },
     };
   }
 }
@@ -128,7 +128,7 @@ class SurveyQueryBuilder extends QueryBuilder {
 
   canRead(user) {
     const pattern = `% ${user} %`;
-    return this.where(b => {
+    return this.where((b) => {
       b.canWrite(user).orWhere("readers", "like", pattern);
     });
   }
@@ -191,9 +191,9 @@ export class SurveyResponse extends Model {
         modelClass: Survey,
         join: {
           from: "responses.survey_id",
-          to: "surveys.id"
-        }
-      }
+          to: "surveys.id",
+        },
+      },
     };
   }
 }
