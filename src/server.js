@@ -15,7 +15,7 @@ const indexPath = process.env.INDEX_PATH;
 
 function overrideCacheControl(req, res, next) {
   const setHeader = res.setHeader;
-  res.setHeader = function(key, value) {
+  res.setHeader = function (key, value) {
     if (value === "max-age=600") {
       setHeader.call(this, key, "no-store, no-cache, must-revalidate, private");
     } else {
@@ -23,6 +23,21 @@ function overrideCacheControl(req, res, next) {
     }
   };
   next();
+}
+
+function redirectEndingSlash(req, res, next) {
+  if (req.path === adminPath) {
+    res.redirect(301, req.path + "/");
+  } else if (
+    req.path.length > 1 &&
+    !req.path.startsWith(adminPath) &&
+    req.path.endsWith("/")
+  ) {
+    const query = req.url.slice(req.path.length);
+    res.redirect(301, req.path.slice(0, -1) + query);
+  } else {
+    next();
+  }
 }
 
 const app = express();
@@ -34,18 +49,8 @@ app
       req.url = req.originalUrl = indexPath;
     }
     next();
-  })
-  .use(
-    compression({ threshold: 0 }),
-    sirv("static", { dev }),
-    (req, res, next) => {
-      if (req.path === adminPath) {
-        res.redirect(301, req.path + "/");
-      } else {
-        next();
-      }
-    }
-  )
+  }, redirectEndingSlash)
+  .use(compression({ threshold: 0 }), sirv("static", { dev }))
   .use(
     adminPath,
     overrideCacheControl,
@@ -54,21 +59,21 @@ app
       sameSite: false,
       name: "survadm",
       keys: [process.env.AUTH_SECRET],
-      maxAge: sessionLifetime
+      maxAge: sessionLifetime,
     }),
     express.json()
   )
   .use(
     sapper.middleware({
-      session: req => (req.session ? req.session.user : null)
+      session: (req) => (req.session ? req.session.user : null),
     })
   )
-  .listen(PORT, err => {
+  .listen(PORT, (err) => {
     if (err) throw new Error(err);
   });
 
 createSchema();
 
 if (dev) {
-  knex.on("query", q => console.log(q.sql, q.bindings));
+  knex.on("query", (q) => console.log(q.sql, q.bindings));
 }
