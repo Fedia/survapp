@@ -48,8 +48,11 @@
 
   let head = null;
   if (node.type === "html") {
-    node.value = node.value.replace(/<script([^>]*)>/gi, "<script$1 data-s>");
-    onMount(() => runScripts("script[data-s]"));
+    /*
+      // Do we need this? Scripts run twice because of SSR
+      node.value = node.value.replace(/<script([^>]*)>/gi, "<script$1 data-s>");
+      onMount(() => runScripts("script[data-s]"));
+    */
     let m = matchHead(node.value);
     if (m) {
       head = m[1];

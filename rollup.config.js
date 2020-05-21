@@ -12,17 +12,28 @@ import sveltePreprocess from "svelte-preprocess";
 dotenv.config();
 
 // fix trailing whitespace added by prettier
-const markup = input => ({
-  code: input.content.replace(/\s+(<\/|\{\/|\{:)/g, "$1")
+// https://github.com/sveltejs/svelte/issues/189
+const tagsRegex1 = /(>)[\s]*([<{])/g;
+const tagsRegex2 = /({[/:][a-z]+})[\s]*([<{])/g;
+const tagsRegex3 = /({[#:][a-z]+ .+?})[\s]*([<{])/g;
+const tagsRegex4 = /([>}])[\s]+(<|{[/#:][a-z][^}]*})/g;
+const tagsReplace = "$1$2";
+
+const markup = ({ content }) => ({
+  code: content
+    .replace(tagsRegex1, tagsReplace)
+    .replace(tagsRegex2, tagsReplace)
+    .replace(tagsRegex3, tagsReplace)
+    .replace(tagsRegex4, tagsReplace),
 });
 
 const preprocess = {
   ...sveltePreprocess({
     scss: {
-      includePaths: ["src", "node_modules"]
-    }
+      includePaths: ["src", "node_modules"],
+    },
   }),
-  markup
+  markup,
 };
 
 const mode = process.env.NODE_ENV;
@@ -32,14 +43,14 @@ const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 const environment = {
   "process.env.ADMIN_PATH": JSON.stringify(process.env.ADMIN_PATH || "/admin"),
   "process.env.APP_NAME": JSON.stringify(process.env.APP_NAME),
-  "process.env.NODE_ENV": JSON.stringify(mode)
+  "process.env.NODE_ENV": JSON.stringify(mode),
 };
 
 const onwarn = (warning, onwarn) =>
   (warning.code === "CIRCULAR_DEPENDENCY" &&
     /[/\\]@sapper[/\\]/.test(warning.message)) ||
   onwarn(warning);
-const dedupe = importee =>
+const dedupe = (importee) =>
   importee === "svelte" || importee.startsWith("svelte/");
 
 export default {
@@ -52,11 +63,11 @@ export default {
         preprocess,
         dev,
         hydratable: true,
-        emitCss: true
+        emitCss: true,
       }),
       resolve({
         browser: true,
-        dedupe
+        dedupe,
       }),
       commonjs(),
 
@@ -69,28 +80,28 @@ export default {
             [
               "@babel/preset-env",
               {
-                targets: "> 0.25%, not dead"
-              }
-            ]
+                targets: "> 0.25%, not dead",
+              },
+            ],
           ],
           plugins: [
             "@babel/plugin-syntax-dynamic-import",
             [
               "@babel/plugin-transform-runtime",
               {
-                useESModules: true
-              }
-            ]
-          ]
+                useESModules: true,
+              },
+            ],
+          ],
         }),
 
       !dev &&
         terser({
-          module: true
-        })
+          module: true,
+        }),
     ],
 
-    onwarn
+    onwarn,
   },
 
   server: {
@@ -101,20 +112,20 @@ export default {
       svelte({
         preprocess,
         generate: "ssr",
-        dev
+        dev,
       }),
       resolve({
-        dedupe
+        dedupe,
       }),
-      commonjs()
+      commonjs(),
     ],
     external: Object.keys(pkg.dependencies).concat(
       require("module").builtinModules ||
         Object.keys(process.binding("natives"))
     ),
 
-    onwarn
-  }
+    onwarn,
+  },
   /*
   serviceworker: {
     input: config.serviceworker.input(),
