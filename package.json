@@ -22,7 +22,7 @@
     "knex": "^0.19.5",
     "lru-cache": "^5.1.1",
     "nanoid": "^2.1.11",
-    "nodemailer": "^4.7.0",
+    "nodemailer": "^6.4.16",
     "objection": "^1.6.11",
     "polka": "next",
     "remark-parse": "^7.0.2",
