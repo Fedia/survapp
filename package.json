@@ -21,7 +21,7 @@
     "fast-csv": "^3.7.0",
     "knex": "^0.19.5",
     "lru-cache": "^5.1.1",
-    "nanoid": "^2.1.11",
+    "nanoid": "^3.1.31",
     "nodemailer": "^4.7.0",
     "objection": "^1.6.11",
     "polka": "next",
