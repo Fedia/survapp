@@ -17,7 +17,7 @@
     "cookie": "^0.4.0",
     "cookie-session": "^1.4.0",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "fast-csv": "^3.7.0",
     "knex": "^0.19.5",
     "lru-cache": "^5.1.1",
